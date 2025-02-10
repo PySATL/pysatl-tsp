@@ -1,0 +1,38 @@
+[project]
+name = "ts-flow"
+version = "0.1.0"
+description = "Python library for time series processing, serialization and deserialization"
+authors = [
+    {name = "Rustam Shangareev"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+dependencies = [
+]
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+respect-gitignore = true
+exclude = ["*.ipynb"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint]
+select = ["A", "E", "F", "I", "PL", "RUF", "SIM", "UP", "W"]
+ignore = ["PLR0913"]
+
+[tool.mypy]
+files = "ts_flow"
+mypy_path = "ts_flow"
+strict = true
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
