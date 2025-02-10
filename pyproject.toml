@@ -10,6 +10,21 @@ readme = "README.md"
 dependencies = [
 ]
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+mypy = "^1.10.1"
+ruff = "^0.11.2"
+pre-commit = "^4.1.0"
+pyyaml = "^6.0.1"
+matplotlib = "^3.9.1"
+ipykernel = "^6.29.5"
+hypothesis = "^6.122.1"
+scipy-stubs = "^1.15.2"
+types-pyyaml = "^6.0.12"
+microsoft-python-type-stubs = {git = "https://github.com/microsoft/python-type-stubs.git"}
+pytest-cov = "^6.0.0"
+claspy="0.2.5"
+
 [tool.ruff]
 line-length = 120
 indent-width = 4
