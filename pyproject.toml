@@ -1,4 +1,4 @@
-[project]
+[tool.poetry]
 name = "ts-flow"
 version = "0.1.0"
 description = "Python library for time series processing, serialization and deserialization"
