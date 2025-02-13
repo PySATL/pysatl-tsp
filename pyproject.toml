@@ -3,9 +3,9 @@ name = "ts-flow"
 version = "0.1.0"
 description = "Python library for time series processing, serialization and deserialization"
 authors = [
-    {name = "Rustam Shangareev"}
+    "Rustam Shangareev <rustam.letitbe@gmail.com>"
 ]
-license = {text = "MIT"}
+license = "MIT"
 readme = "README.md"
 dependencies = [
 ]
