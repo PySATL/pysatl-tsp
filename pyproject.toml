@@ -7,8 +7,6 @@ authors = [
 ]
 license = "MIT"
 readme = "README.md"
-dependencies = [
-]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
