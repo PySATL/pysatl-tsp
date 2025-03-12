@@ -1,8 +1,8 @@
-from ts_flow.core import Handler
-from typing import Optional, Any, Iterator
-from itertools import islice
+from collections.abc import Iterator
+from typing import Any, Optional
 
-from collections import deque
+from ts_flow.core import Handler
+
 from .abstract import Scrubber, ScrubberWindow, T
 
 
@@ -13,25 +13,17 @@ class LinearScrubber(Scrubber[T]):
         super().__init__(source)
         self._window_length = window_length
         self._shift: int = max(1, int(shift_factor * window_length))
-        self._values_buffer: deque[T] = deque(maxlen=window_length + self._shift)
-        self._indices_buffer: deque[int] = deque(maxlen=window_length + self._shift)
-        self._current_index = 0
+        self._buffer: ScrubberWindow[T] = ScrubberWindow()
 
     def __iter__(self) -> Iterator[ScrubberWindow[T]]:
         if self.source is None:
             raise ValueError("Source is not set")
 
-        for item in self.source:
-            self._values_buffer.append(item)
-            self._indices_buffer.append(self._current_index)
-            while len(self._values_buffer) >= self._window_length:
-                values = list(islice(self._values_buffer, 0, self._window_length))
-                indices = list(islice(self._indices_buffer, 0, self._window_length))
-                yield ScrubberWindow(values, indices)
+        for i, item in enumerate(self.source):
+            self._buffer.append(item, i)
+            while len(self._buffer) >= self._window_length:
+                yield self._buffer[: self._window_length]
 
                 for _ in range(self._shift):
-                    if self._values_buffer:
-                        self._values_buffer.popleft()
-                    if self._indices_buffer:
-                        self._indices_buffer.popleft()
-            self._current_index += 1
+                    if self._buffer:
+                        self._buffer.popleft()
