@@ -1,22 +1,43 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Generic, List, Optional, Iterator, Any, overload, Union
 from abc import abstractmethod
+from collections import deque
+from collections.abc import Iterator
+from itertools import islice
+from typing import Any, Generic, overload
 
-from ts_flow.core import T, Handler
+from ts_flow.core import Handler, T
 
-__all__ = ["ScrubberWindow", "Scrubber", "T"]
+__all__ = ["Scrubber", "ScrubberWindow", "T"]
 
 
 class ScrubberWindow(Generic[T]):
-    def __init__(self, values: list[T], indices: Optional[list[int]] = None) -> None:
+    def __init__(self, values: deque[T] | None = None, indices: deque[int] | None = None) -> None:
+        if values is None:
+            values = deque()
         if indices is None:
-            indices = list(range(len(values)))
+            indices = deque(range(len(values)))
         if len(values) != len(indices):
             raise ValueError("Values and indices of ScrubberWindow must be same length")
         self.values = values
         self.indices = indices
+
+    def append(self, value: T, index: int | None = None) -> None:
+        self.values.append(value)
+        if index is None:
+            index = len(self)
+        self.indices.append(index)
+
+    def popleft(self) -> None:
+        self.values.popleft()
+        self.indices.popleft()
+
+    def clear(self) -> None:
+        self.values.clear()
+        self.indices.clear()
+
+    def copy(self) -> ScrubberWindow[T]:
+        return ScrubberWindow(self.values.copy(), self.indices.copy())
 
     @overload
     def __getitem__(self, key: int) -> T: ...
@@ -24,13 +45,16 @@ class ScrubberWindow(Generic[T]):
     @overload
     def __getitem__(self, key: slice) -> ScrubberWindow[T]: ...
 
-    def __getitem__(self, key: Union[int, slice]) -> Union[T, ScrubberWindow[T]]:
+    def __getitem__(self, key: int | slice) -> T | ScrubberWindow[T]:
         match key:
             case int() as idx:
                 return self.values[idx]
 
             case slice() as s:
-                return ScrubberWindow(values=self.values[s], indices=self.indices[s])
+                return ScrubberWindow(
+                    values=deque(islice(self.values, s.start, s.stop)),
+                    indices=deque(islice(self.indices, s.start, s.stop)),
+                )
 
             case _:
                 raise TypeError(f"Unsupported key type: {type(key).__name__}")
@@ -43,9 +67,15 @@ class ScrubberWindow(Generic[T]):
             return NotImplemented
         return self.values == other.values and self.indices == other.indices
 
+    def __repr__(self) -> str:
+        return f"ScrubberWindow(values: {self.values}, indices: {self.indices})"
+
+    def __iter__(self) -> Iterator[T]:
+        return iter(self.values)
+
 
 class Scrubber(Handler[T, ScrubberWindow[T]]):
-    def __init__(self, source: Optional[Handler[Any, T]] = None) -> None:
+    def __init__(self, source: Handler[Any, T] | None = None) -> None:
         super().__init__(source)
 
     @abstractmethod
