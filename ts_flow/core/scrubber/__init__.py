@@ -1,5 +1,12 @@
 from .abstract import Scrubber, ScrubberWindow
 from .linear_scrubber import LinearScrubber
-from .segmentation_scrubber import SegmentationScrubber, OnlineStrategy, OfflineStrategy
+from .segmentation_scrubber import OfflineSegmentationScrubber, OnlineSegmentationScrubber
 
-__all__ = ["ScrubberWindow", "Scrubber", "LinearScrubber", "SegmentationScrubber", "OfflineStrategy", "OnlineStrategy"]
+__all__ = [
+    "LinearScrubber",
+    "OfflineSegmentationScrubber",
+    "OnlineSegmentationScrubber",
+    "Scrubber",
+    "ScrubberWindow",
+    "SegmentationScrubber",
+]
