@@ -1,5 +1,6 @@
+from collections.abc import Iterable, Iterator
+
 from .abstract import DataProvider, T
-from typing import Iterable, Iterator
 
 
 class SimpleDataProvider(DataProvider[T]):
