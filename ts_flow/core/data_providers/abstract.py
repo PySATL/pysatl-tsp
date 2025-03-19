@@ -1,6 +1,8 @@
-from ts_flow.core import Handler, T
 from abc import abstractmethod
-from typing import Iterator, Any
+from collections.abc import Iterator
+from typing import Any
+
+from ts_flow.core import Handler, T
 
 __all__ = ["DataProvider", "T"]
 
