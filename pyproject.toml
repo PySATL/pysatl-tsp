@@ -29,7 +29,6 @@ scipy-stubs = "^1.15.2"
 types-pyyaml = "^6.0.12"
 microsoft-python-type-stubs = {git = "https://github.com/microsoft/python-type-stubs.git"}
 pytest-cov = "^6.0.0"
-claspy="0.2.5"
 
 [tool.ruff]
 line-length = 120
