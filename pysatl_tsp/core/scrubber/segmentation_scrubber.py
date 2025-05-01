@@ -2,7 +2,7 @@ from collections import deque
 from collections.abc import Iterator
 from typing import Any, Callable, Optional
 
-from ts_flow.core import Handler, T
+from pysatl_tsp.core import Handler, T
 
 from .abstract import Scrubber, ScrubberWindow
 

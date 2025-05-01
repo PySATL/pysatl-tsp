@@ -1,7 +1,7 @@
 from collections.abc import Iterator
 from typing import Any, Optional
 
-from ts_flow.core import Handler
+from pysatl_tsp.core import Handler
 
 from .abstract import Scrubber, ScrubberWindow, T
 

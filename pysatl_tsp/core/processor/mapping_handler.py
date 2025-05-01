@@ -1,7 +1,7 @@
 from collections.abc import Iterator
 from typing import Any, Callable, Optional
 
-from ts_flow.core import Handler, T, U
+from pysatl_tsp.core import Handler, T, U
 
 
 class MappingHandler(Handler[T, U]):

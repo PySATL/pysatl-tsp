@@ -5,7 +5,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from ts_flow.core.data_providers import DataProvider, FileDataProvider, SimpleDataProvider
+from pysatl_tsp.core.data_providers import DataProvider, FileDataProvider, SimpleDataProvider
 
 T = TypeVar("T")
 

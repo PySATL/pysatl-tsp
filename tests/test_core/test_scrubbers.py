@@ -5,8 +5,8 @@ import hypothesis.strategies as st
 import numpy as np
 from hypothesis import given, settings
 
-from ts_flow.core.data_providers import SimpleDataProvider
-from ts_flow.core.scrubber import (
+from pysatl_tsp.core.data_providers import SimpleDataProvider
+from pysatl_tsp.core.scrubber import (
     LinearScrubber,
     OfflineSegmentationScrubber,
     OnlineSegmentationScrubber,

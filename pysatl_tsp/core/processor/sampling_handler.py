@@ -1,8 +1,8 @@
 from collections.abc import Iterator
 from typing import Any, Callable, Optional
 
-from ts_flow.core import Handler, T
-from ts_flow.core.scrubber import OfflineSegmentationScrubber, OnlineSegmentationScrubber, ScrubberWindow
+from pysatl_tsp.core import Handler, T
+from pysatl_tsp.core.scrubber import OfflineSegmentationScrubber, OnlineSegmentationScrubber, ScrubberWindow
 
 from .mapping_handler import MappingHandler
 

@@ -2,8 +2,8 @@ from collections import deque
 from collections.abc import Iterator
 from typing import Any, Callable, Optional
 
-from ts_flow.core import Handler, T, U
-from ts_flow.core.scrubber import ScrubberWindow
+from pysatl_tsp.core import Handler, T, U
+from pysatl_tsp.core.scrubber import ScrubberWindow
 
 
 class OnlineFilterHandler(Handler[T, U]):

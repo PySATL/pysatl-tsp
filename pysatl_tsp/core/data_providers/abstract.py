@@ -2,7 +2,7 @@ from abc import abstractmethod
 from collections.abc import Iterator
 from typing import Any
 
-from ts_flow.core import Handler, T
+from pysatl_tsp.core import Handler, T
 
 __all__ = ["DataProvider", "T"]
 

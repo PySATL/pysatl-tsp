@@ -6,15 +6,15 @@ from hypothesis import given
 from hypothesis import strategies as st
 from hypothesis.strategies import DrawFn
 
-from ts_flow.core.data_providers import DataProvider, SimpleDataProvider
-from ts_flow.core.processor import (
+from pysatl_tsp.core.data_providers import DataProvider, SimpleDataProvider
+from pysatl_tsp.core.processor import (
     MappingHandler,
     OfflineFilterHandler,
     OfflineSamplingHandler,
     OnlineFilterHandler,
     OnlineSamplingHandler,
 )
-from ts_flow.core.scrubber import ScrubberWindow
+from pysatl_tsp.core.scrubber import ScrubberWindow
 
 
 class TestMappingHandlerWithHypothesis:

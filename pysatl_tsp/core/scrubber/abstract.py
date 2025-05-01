@@ -6,7 +6,7 @@ from collections.abc import Iterator
 from itertools import islice
 from typing import Any, Generic, overload
 
-from ts_flow.core import Handler, T
+from pysatl_tsp.core import Handler, T
 
 __all__ = ["Scrubber", "ScrubberWindow", "T"]
 

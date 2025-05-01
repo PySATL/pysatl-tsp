@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ts-flow"
+name = "pysatl_tsp"
 version = "0.1.0"
 description = "Python library for time series processing, serialization and deserialization"
 authors = [
@@ -48,8 +48,8 @@ select = ["A", "E", "F", "I", "PL", "RUF", "SIM", "UP", "W"]
 ignore = ["PLR0913"]
 
 [tool.mypy]
-files = "ts_flow"
-mypy_path = "ts_flow"
+files = "pysatl_tsp"
+mypy_path = "pysatl_tsp"
 strict = true
 
 
