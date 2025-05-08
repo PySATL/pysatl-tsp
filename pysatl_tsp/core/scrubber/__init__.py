@@ -1,5 +1,5 @@
 from .abstract import Scrubber, ScrubberWindow
-from .linear_scrubber import LinearScrubber
+from .linear_scrubber import LinearScrubber, SlidingScrubber
 from .segmentation_scrubber import OfflineSegmentationScrubber, OnlineSegmentationScrubber
 
 __all__ = [
@@ -9,4 +9,5 @@ __all__ = [
     "Scrubber",
     "ScrubberWindow",
     "SegmentationScrubber",
+    "SlidingScrubber",
 ]
