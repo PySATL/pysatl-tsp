@@ -29,6 +29,7 @@ scipy-stubs = "^1.15.2"
 types-pyyaml = "^6.0.12"
 microsoft-python-type-stubs = {git = "https://github.com/microsoft/python-type-stubs.git"}
 pytest-cov = "^6.0.0"
+websockets = "^15.0.1"
 
 [tool.ruff]
 line-length = 120
