@@ -142,4 +142,4 @@ class TimeSeriesCrossValidator(Handler[T, tuple[ScrubberWindow[T], ScrubberWindo
             map_func=lambda window: (window[: -self.val_size], window[-self.val_size :])
         )
 
-        return iter(scrubber | handler)
+        yield from (scrubber | handler)
