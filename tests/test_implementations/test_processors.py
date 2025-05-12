@@ -2,7 +2,7 @@ from typing import Any
 
 import numpy as np
 import pytest
-from hypothesis import assume, given
+from hypothesis import given
 from hypothesis import strategies as st
 
 from pysatl_tsp.core.data_providers import SimpleDataProvider
@@ -187,11 +187,12 @@ class TestKalmanFilterHandler:
         kf.predict()
 
         # Update with measurement = 10
-        kf.update(10.0)
+        measurement = 10.0
+        kf.update(measurement)
 
         # State should move toward measurement
         assert kf.x[0, 0] > 0  # Should be greater than initial
-        assert kf.x[0, 0] < 10  # Should be less than measurement
+        assert kf.x[0, 0] < measurement  # Should be less than measurement
 
     def test_dimensions(self) -> None:
         """Test with different state dimensions."""
@@ -200,7 +201,7 @@ class TestKalmanFilterHandler:
         H_2d = np.array([1, 0]).reshape(1, 2)
 
         kf_2d = KalmanFilterHandler(F=F_2d, H=H_2d)
-        assert kf_2d.n == 2
+        assert kf_2d.n == len(F_2d)
         assert kf_2d.x.shape == (2, 1)
 
         # 3D state
@@ -208,7 +209,7 @@ class TestKalmanFilterHandler:
         H_3d = np.array([1, 0, 0]).reshape(1, 3)
 
         kf_3d = KalmanFilterHandler(F=F_3d, H=H_3d)
-        assert kf_3d.n == 3
+        assert kf_3d.n == len(F_3d)
         assert kf_3d.x.shape == (3, 1)
 
     def test_known_case(self) -> None:
@@ -229,10 +230,10 @@ class TestKalmanFilterHandler:
         filtered_values = list(filter_handler)
 
         assert len(filtered_values) == len(measurements)
-        assert filtered_values[0] == 0 
+        assert filtered_values[0] == 0
 
         errors = [abs(v - 5.0) for v in filtered_values]
-        assert errors[-1] < errors[0] 
+        assert errors[-1] < errors[0]
 
     def test_initialization_with_matrices(self) -> None:
         F = np.array([[1, 0.1], [0, 1]])
