@@ -34,9 +34,9 @@ poetry install
 ## Basic Pipeline Example:
 
 ```python
-from pysatl_tsp.provider import SimpleDataProvider
-from pysatl_tsp.processor import MappingHandler
-from pysatl_tsp.scrubber import LinearScrubber
+from pysatl_tsp.core.data_providers import SimpleDataProvider
+from pysatl_tsp.core.processor import MappingHandler
+from pysatl_tsp.core.scrubber import LinearScrubber
 
 # Create a data source
 data = [i for i in range(100)]
