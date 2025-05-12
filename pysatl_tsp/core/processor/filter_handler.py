@@ -22,7 +22,9 @@ class OnlineFilterHandler(Handler[T, U]):
 
     Example:
         ```python
-        # Create a data source with some noise
+        from pysatl_tsp.core.data_providers import SimpleDataProvider
+        from pysatl_tsp.core.scrubber import ScrubberWindow
+        from pysatl_tsp.core.processor import OnlineFilterHandler
         import random
 
         random.seed(42)
@@ -36,7 +38,7 @@ class OnlineFilterHandler(Handler[T, U]):
             lookback = min(len(window), config)
             if lookback == 0:
                 return 0
-            return sum(window.values[-lookback:]) / lookback
+            return sum(window[-lookback:].values) / lookback
 
 
         # Create the online filter with a window size of 5
