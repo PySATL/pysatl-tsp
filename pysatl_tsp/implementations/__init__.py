@@ -1,3 +1,3 @@
-from .processor import TimeSeriesCrossValidator
+from .processor import KalmanFilterHandler, TimeSeriesCrossValidator
 
-__all__ = ["TimeSeriesCrossValidator"]
+__all__ = ["KalmanFilterHandler", "TimeSeriesCrossValidator"]
