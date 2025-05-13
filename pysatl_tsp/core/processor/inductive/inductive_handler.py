@@ -143,11 +143,10 @@ class InductiveHandler(Handler[T, U], ABC):
             allowing the same handler to be reused for multiple iterations.
         """
         if self.source is None:
-            return
+            raise ValueError("Source is not set")
 
         self._state = self._initialize_state()
         for value in self.source:
             self._state = self._update_state(self._state, value)
             next_value = self._compute_result(self._state)
-            if next_value:
-                yield next_value
+            yield next_value
