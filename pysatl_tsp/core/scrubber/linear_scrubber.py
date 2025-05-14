@@ -1,5 +1,5 @@
 from collections.abc import Iterator
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 from pysatl_tsp.core import Handler
 
@@ -47,7 +47,7 @@ class SlidingScrubber(Scrubber[T]):
     """
 
     def __init__(
-        self, take_condition: Callable[[ScrubberWindow[T]], bool], shift: int, source: Optional[Handler[Any, T]] = None
+        self, take_condition: Callable[[ScrubberWindow[T]], bool], shift: int, source: Handler[Any, T] | None = None
     ) -> None:
         """Initialize a sliding scrubber with custom condition and shift.
 
@@ -115,7 +115,7 @@ class LinearScrubber(SlidingScrubber[T]):
     """
 
     def __init__(
-        self, window_length: int = 100, shift_factor: float = 1.0 / 3.0, source: Optional[Handler[Any, T]] = None
+        self, window_length: int = 100, shift_factor: float = 1.0 / 3.0, source: Handler[Any, T] | None = None
     ) -> None:
         """Initialize a linear scrubber with fixed window size and overlap.
 
