@@ -32,6 +32,7 @@ microsoft-python-type-stubs = {git = "https://github.com/microsoft/python-type-s
 pytest-cov = "^6.0.0"
 websockets = "^15.0.1"
 pytest-asyncio = "^1.0.0"
+pandas_ta = "0.3.14b0"
 
 [tool.ruff]
 line-length = 120
