@@ -1,6 +1,6 @@
 from collections import deque
 from collections.abc import Iterator
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 from pysatl_tsp.core import Handler, T
 
@@ -53,7 +53,7 @@ class OfflineSegmentationScrubber(Scrubber[T]):
     """
 
     def __init__(
-        self, segmentation_rule: Callable[[ScrubberWindow[T]], list[int]], source: Optional[Handler[Any, T]] = None
+        self, segmentation_rule: Callable[[ScrubberWindow[T]], list[int]], source: Handler[Any, T] | None = None
     ):
         """Initialize an offline segmentation scrubber.
 
@@ -137,7 +137,7 @@ class OnlineSegmentationScrubber(Scrubber[T]):
         self,
         segmentation_rule: Callable[[ScrubberWindow[T]], bool],
         max_segment_size: int = 2**64,
-        source: Optional[Handler[Any, T]] = None,
+        source: Handler[Any, T] | None = None,
     ):
         """Initialize an online segmentation scrubber.
 
