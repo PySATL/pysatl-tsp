@@ -1,6 +1,6 @@
 from collections import deque
 from collections.abc import Iterator
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 from pysatl_tsp.core import Handler, T, U
 from pysatl_tsp.core.scrubber import ScrubberWindow
@@ -71,7 +71,7 @@ class OnlineFilterHandler(Handler[T, U]):
         self,
         filter_func: Callable[[ScrubberWindow[T], Any], U],
         filter_config: Any = None,
-        source: Optional[Handler[Any, T]] = None,
+        source: Handler[Any, T] | None = None,
     ):
         """Initialize an online filter handler.
 
@@ -162,7 +162,7 @@ class OfflineFilterHandler(Handler[T, U]):
         self,
         filter_func: Callable[[ScrubberWindow[T], Any], list[U]],
         filter_config: Any = None,
-        source: Optional[Handler[Any, T]] = None,
+        source: Handler[Any, T] | None = None,
     ):
         """Initialize an offline filter handler.
 

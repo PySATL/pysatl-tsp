@@ -1,5 +1,5 @@
 from collections.abc import Iterator
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 from pysatl_tsp.core import Handler, T, U
 
@@ -72,7 +72,7 @@ class MappingHandler(Handler[T, U]):
         ```
     """
 
-    def __init__(self, map_func: Callable[[T], U], source: Optional[Handler[Any, T]] = None):
+    def __init__(self, map_func: Callable[[T], U], source: Handler[Any, T] | None = None):
         """Initialize a mapping handler.
 
         :param map_func: Function that transforms each input item to an output item

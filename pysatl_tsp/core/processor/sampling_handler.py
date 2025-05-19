@@ -1,5 +1,5 @@
 from collections.abc import Iterator
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 from pysatl_tsp.core import Handler, T
 from pysatl_tsp.core.scrubber import OfflineSegmentationScrubber, OnlineSegmentationScrubber, ScrubberWindow
@@ -55,7 +55,7 @@ class OnlineSamplingHandler(Handler[T, T]):
         ```
     """
 
-    def __init__(self, sampling_rule: Callable[[ScrubberWindow[T]], bool], source: Optional[Handler[Any, T]] = None):
+    def __init__(self, sampling_rule: Callable[[ScrubberWindow[T]], bool], source: Handler[Any, T] | None = None):
         """Initialize an online sampling handler.
 
         :param sampling_rule: Function that decides when to take a sample
@@ -155,9 +155,7 @@ class OfflineSamplingHandler(Handler[T, T]):
         ```
     """
 
-    def __init__(
-        self, sampling_rule: Callable[[ScrubberWindow[T]], list[int]], source: Optional[Handler[Any, T]] = None
-    ):
+    def __init__(self, sampling_rule: Callable[[ScrubberWindow[T]], list[int]], source: Handler[Any, T] | None = None):
         """Initialize an offline sampling handler.
 
         :param sampling_rule: Function that analyzes the entire series and returns indices of points to sample
