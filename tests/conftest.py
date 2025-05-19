@@ -1,7 +1,7 @@
 import sys
 import pkgutil
 
-# Monkey patch для Python 3.12
+# Monkey patch for Python 3.12
 if not hasattr(pkgutil, "ImpImporter"):
 
     class MockImpImporter:
