@@ -8,3 +8,8 @@ if not hasattr(pkgutil, "ImpImporter"):
             pass
 
     pkgutil.ImpImporter = MockImpImporter
+
+import numpy
+
+if not hasattr(numpy, "NaN"):
+    numpy.NaN = numpy.nan
