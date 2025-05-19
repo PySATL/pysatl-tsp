@@ -1,4 +1,3 @@
-import sys
 import pkgutil
 
 # Monkey patch for Python 3.12
