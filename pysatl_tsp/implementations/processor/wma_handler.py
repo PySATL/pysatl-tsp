@@ -52,7 +52,7 @@ class WMAHandler(WeightedMovingAverageHandler):
                    When False (default), higher weights are assigned to more recent values
         :return: A list of normalized weights summing to 1.0
         """
-        weights = np.arange(1, length + 1)
+        weights: list[float] = list(np.arange(1, length + 1))
         if not asc:
             weights = weights[::-1]
 
