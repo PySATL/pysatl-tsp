@@ -3,6 +3,7 @@ import pandas_ta as ta  # type: ignore
 import pytest
 
 from pysatl_tsp.core.data_providers import SimpleDataProvider
+from pysatl_tsp.implementations.processor.sma_handler import SMAHandler
 from pysatl_tsp.implementations.processor.t3_handler import T3Handler
 from tests.utils import safe_allclose
 
@@ -160,8 +161,6 @@ def test_t3_requires_source() -> None:
 
 def test_t3_pipeline_chaining() -> None:
     """Test that T3Handler can be chained in a pipeline."""
-    from pysatl_tsp.implementations.processor.sma_handler import SMAHandler
-
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     provider: SimpleDataProvider[float | None] = SimpleDataProvider(data)
 

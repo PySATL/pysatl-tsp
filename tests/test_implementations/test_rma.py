@@ -6,6 +6,7 @@ from hypothesis import strategies as st
 
 from pysatl_tsp.core.data_providers import SimpleDataProvider
 from pysatl_tsp.implementations.processor.rma_handler import RMAHandler
+from pysatl_tsp.implementations.processor.sma_handler import SMAHandler
 from tests.utils import safe_allclose
 
 
@@ -138,8 +139,6 @@ def test_rma_requires_source() -> None:
 
 def test_rma_pipeline_chaining() -> None:
     """Test that RMAHandler can be chained in a pipeline."""
-    from pysatl_tsp.implementations.processor.sma_handler import SMAHandler
-
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     provider: SimpleDataProvider[float | None] = SimpleDataProvider(data)
 
