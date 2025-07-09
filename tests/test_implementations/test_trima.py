@@ -5,6 +5,7 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from pysatl_tsp.core.data_providers import SimpleDataProvider
+from pysatl_tsp.implementations.processor.sma_handler import SMAHandler
 from pysatl_tsp.implementations.processor.trima_handler import TRIMAHandler
 from tests.utils import safe_allclose
 
@@ -150,8 +151,6 @@ def test_trima_requires_source() -> None:
 
 def test_trima_pipeline_chaining() -> None:
     """Test that TRIMAHandler can be chained in a pipeline."""
-    from pysatl_tsp.implementations.processor.sma_handler import SMAHandler
-
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     provider: SimpleDataProvider[float | None] = SimpleDataProvider(data)
 
