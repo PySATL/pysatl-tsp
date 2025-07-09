@@ -150,6 +150,13 @@ class ScrubberWindow(Generic[T]):
             return NotImplemented
         return self.values == other.values and self.indices == other.indices
 
+    def __hash__(self) -> int:
+        """Get window's hash code.
+
+        :return: The hash value of the object
+        """
+        return hash((self.values, self.indices))
+
     def __repr__(self) -> str:
         """Get a string representation of the window.
 
