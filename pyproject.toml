@@ -17,6 +17,12 @@ matplotlib = "^3.9.1"
 scikit-learn = "^1.5.2"
 PyQt5 = "^5.15.11"
 
+[tool.poetry.group.julia]
+optional = true
+
+[tool.poetry.group.julia.dependencies]
+juliacall = "^0.9.20"
+
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
 pytest-mock = "^3.14.0"
