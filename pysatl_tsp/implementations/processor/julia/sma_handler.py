@@ -1,19 +1,23 @@
 from typing import Any
 
 from pysatl_tsp.core import Handler
-from pysatl_tsp.core.processor.inductive.moving_window_handler import MovingWindowHandler
 
-from ._bridge import get_moving_average_module
+from ._base import JuliaHandler, JuliaOpSpec
 
 
-class JuliaSMAHandler(MovingWindowHandler[float | None, float | None]):
+class JuliaSMAHandler(JuliaHandler):
     """Simple Moving Average (SMA) Handler backed by a Julia implementation.
 
     Behaves identically to :class:`SMAHandler` and is a drop-in replacement for
-    it inside processing pipelines, but delegates the window computation to the
-    Julia ``MovingAverage.sma`` function via juliacall. This makes it possible
-    to move performance-critical numerical code to Julia while keeping the
-    library's Handler/Pipeline architecture unchanged.
+    it inside processing pipelines, but delegates the computation to the Julia
+    backend. This makes it possible to move performance-critical numerical code
+    to Julia while keeping the library's Handler/Pipeline architecture
+    unchanged.
+
+    When this handler directly follows another Julia-backed handler, both are
+    evaluated inside a single Julia chain, so the pipeline crosses the language
+    boundary once per observation regardless of how many Julia handlers it
+    contains.
 
     None values are ignored in the calculation, and a minimum number of valid
     observations can be required before producing a result.
@@ -47,22 +51,13 @@ class JuliaSMAHandler(MovingWindowHandler[float | None, float | None]):
                            defaults to length if None
         :param source: Input data source, defaults to None
         """
-        super().__init__(length=length, source=source)
-        self.min_periods = min_periods if min_periods is not None else length
-        self._backend: Any | None = None
+        super().__init__(source)
+        self.length = length if length and length > 0 else 10
+        self.min_periods = min_periods if min_periods is not None else self.length
 
-    def _compute_result(self, state: dict[str, Any]) -> float | None:
-        """Calculate simple moving average by delegating to the Julia backend.
+    def _julia_op_spec(self) -> JuliaOpSpec:
+        """Describe this handler as a Julia simple moving average operation.
 
-        The current window is passed to Julia as a vector where Python None is
-        converted to Julia `nothing`. The backend returns either a Float64 or
-        `nothing`, which is converted back to float or None respectively.
-
-        :param state: Current state containing the values in the moving window
-        :return: Simple moving average of valid values or None if there aren't enough valid values
+        :return: Specification of the Julia ``sma`` operation
         """
-        if self._backend is None:
-            self._backend = get_moving_average_module()
-
-        result = self._backend.sma(list(state["values"]), self.min_periods)
-        return None if result is None else float(result)
+        return JuliaOpSpec("sma", (self.length, self.min_periods))

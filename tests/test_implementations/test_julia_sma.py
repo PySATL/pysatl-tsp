@@ -1,4 +1,5 @@
 from typing import Any
+from unittest.mock import patch
 
 import pytest
 from hypothesis import given, settings
@@ -6,40 +7,40 @@ from hypothesis import strategies as st
 
 from pysatl_tsp.core.data_providers import SimpleDataProvider
 from pysatl_tsp.implementations.processor.julia import JuliaSMAHandler
-from pysatl_tsp.implementations.processor.julia._bridge import get_moving_average_module
+from pysatl_tsp.implementations.processor.julia import _base as julia_base
+from pysatl_tsp.implementations.processor.julia._bridge import get_backend
 from pysatl_tsp.implementations.processor.sma_handler import SMAHandler
-from tests.utils import safe_allclose
+from tests.utils import JuliaBackendStub, safe_allclose
 
 
 @pytest.fixture(scope="module")
 def julia_backend() -> Any:
-    """Provide the Julia MovingAverage module or skip if Julia is unavailable.
+    """Provide the Julia TSPBackend module or skip if Julia is unavailable.
 
     The Julia runtime is an optional heavy dependency: integration tests are
     skipped (not failed) when juliacall is not installed or the Julia binary
     cannot be initialized in the current environment.
+
+    :return: Handle to the Julia backend module
     """
     try:
-        return get_moving_average_module()
+        return get_backend()
     except Exception as exc:
         # juliacall may raise not only ImportError but also e.g. network errors
         # while bootstrapping the Julia binary, so we catch broadly.
         pytest.skip(f"Julia runtime is not available: {exc}")
 
 
-class _PythonSMABackend:
-    """Stub mimicking the interface of the Julia MovingAverage module.
+@pytest.fixture
+def stub(monkeypatch: pytest.MonkeyPatch) -> JuliaBackendStub:
+    """Replace the Julia backend with a pure-Python double.
 
-    Used to test the handler's plumbing (pipeline integration, window
-    management, None conversion) without requiring a Julia runtime.
+    :param monkeypatch: pytest monkeypatch fixture
+    :return: The stub backend used by every Julia handler in the test
     """
-
-    @staticmethod
-    def sma(values: list[float | None], min_periods: int) -> float | None:
-        valid = [v for v in values if v is not None]
-        if len(valid) < min_periods:
-            return None
-        return sum(valid) / len(valid)
+    backend = JuliaBackendStub()
+    monkeypatch.setattr(julia_base, "get_backend", lambda: backend)
+    return backend
 
 
 # ---------------------------------------------------------------------------
@@ -47,12 +48,10 @@ class _PythonSMABackend:
 # ---------------------------------------------------------------------------
 
 
-def test_julia_sma_pipeline_plumbing_with_stub_backend() -> None:
-    handler = JuliaSMAHandler(length=3, min_periods=2)
-    handler._backend = _PythonSMABackend()
-
+def test_julia_sma_pipeline_plumbing_with_stub_backend(stub: JuliaBackendStub) -> None:
     provider: SimpleDataProvider[float | None] = SimpleDataProvider([1.0, None, 3.0, 4.0])
-    result = list(provider | handler)
+
+    result = list(provider | JuliaSMAHandler(length=3, min_periods=2))
 
     assert result[:2] == [None, None]
     assert safe_allclose(result, [None, None, 2.0, 3.5])
@@ -64,12 +63,16 @@ def test_julia_sma_min_periods_defaults_to_length() -> None:
     assert handler.min_periods == length
 
 
-def test_julia_sma_backend_is_lazy() -> None:
-    # Constructing the handler and building a pipeline must not touch Julia
-    handler = JuliaSMAHandler(length=3)
+def test_julia_sma_backend_is_lazy(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Constructing the handler and building a pipeline must not touch Julia."""
+
+    def _fail() -> Any:
+        raise AssertionError("Julia backend must not be initialized while building a pipeline")
+
+    monkeypatch.setattr(julia_base, "get_backend", _fail)
+
     provider: SimpleDataProvider[float | None] = SimpleDataProvider([1.0, 2.0, 3.0])
-    _ = provider | handler
-    assert handler._backend is None
+    _ = provider | JuliaSMAHandler(length=3)
 
 
 @given(
@@ -90,10 +93,9 @@ def test_julia_sma_stub_matches_python_sma(data: list[float | None], length: int
         return
     effective_min_periods = min(min_periods, length) if min_periods is not None else length
 
-    julia_handler = JuliaSMAHandler(length=length, min_periods=effective_min_periods)
-    julia_handler._backend = _PythonSMABackend()
-    provider_a: SimpleDataProvider[float | None] = SimpleDataProvider(data)
-    stub_result = list(provider_a | julia_handler)
+    with patch.object(julia_base, "get_backend", JuliaBackendStub):
+        provider_a: SimpleDataProvider[float | None] = SimpleDataProvider(data)
+        stub_result = list(provider_a | JuliaSMAHandler(length=length, min_periods=effective_min_periods))
 
     provider_b: SimpleDataProvider[float | None] = SimpleDataProvider(data)
     python_result = list(provider_b | SMAHandler(length=length, min_periods=effective_min_periods))
@@ -165,8 +167,11 @@ def test_julia_sma_known_values(
     assert safe_allclose(result, expected)
 
 
-def test_julia_backend_handles_window_directly(julia_backend: Any) -> None:
-    """Sanity check of the Julia function itself, bypassing the handler."""
-    assert julia_backend.sma([1.0, 2.0, 3.0], 3) == pytest.approx(2.0)
-    assert julia_backend.sma([1.0, None, 3.0], 2) == pytest.approx(2.0)
-    assert julia_backend.sma([1.0, None], 2) is None
+def test_julia_backend_chain_works_directly(julia_backend: Any) -> None:
+    """Sanity check of the Julia chain itself, bypassing the handlers."""
+    chain = julia_backend.chain_of(julia_backend.sma(3, 2))
+
+    assert julia_backend.step_chain(chain, 1.0, False)[1] is True
+    value, is_missing = julia_backend.step_chain(chain, 3.0, False)
+    assert is_missing is False
+    assert value == pytest.approx(2.0)

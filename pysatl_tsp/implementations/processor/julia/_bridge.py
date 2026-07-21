@@ -13,19 +13,19 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-__all__ = ["get_moving_average_module"]
+__all__ = ["get_backend"]
 
-_JULIA_SOURCE = Path(__file__).with_name("moving_average.jl")
+_JULIA_SOURCE = Path(__file__).with_name("backend.jl")
 
 
 @lru_cache(maxsize=1)
-def get_moving_average_module() -> Any:
-    """Load the Julia ``MovingAverage`` module and return a handle to it.
+def get_backend() -> Any:
+    """Load the Julia ``TSPBackend`` module and return a handle to it.
 
     The Julia source file is included into the Julia ``Main`` namespace on the
     first call; subsequent calls return the cached module handle.
 
-    :return: Handle to the Julia ``MovingAverage`` module
+    :return: Handle to the Julia ``TSPBackend`` module
     :raises ImportError: If the optional dependency ``juliacall`` is not installed
     """
     try:
@@ -38,4 +38,4 @@ def get_moving_average_module() -> Any:
 
     jl = juliacall.Main
     jl.seval(f'include(raw"{_JULIA_SOURCE}")')
-    return jl.MovingAverage
+    return jl.TSPBackend
